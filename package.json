@@ -1,0 +1,16 @@
+{
+  "name": "express-mesto",
+  "version": "1.0.0",
+  "description": "Проект Mesto: фронтенд и бэкенд",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx eslint"
+  },
+  "author": "Boris Nikitashov",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
