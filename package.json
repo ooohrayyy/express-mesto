@@ -4,6 +4,7 @@
   "description": "Проект Mesto: фронтенд и бэкенд",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "lint": "npx eslint"
   },
   "author": "Boris Nikitashov",
