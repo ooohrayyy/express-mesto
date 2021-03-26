@@ -10,7 +10,7 @@ function getCards(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -26,7 +26,7 @@ function createCard(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -40,7 +40,7 @@ function deleteCard(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -56,7 +56,7 @@ function putLike(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -72,7 +72,7 @@ function revokeLike(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 

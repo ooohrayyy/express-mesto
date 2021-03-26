@@ -10,7 +10,7 @@ function getUsers(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -24,7 +24,7 @@ function getUserById(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -39,7 +39,7 @@ function createUser(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -67,7 +67,7 @@ function updateUser(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
@@ -95,7 +95,7 @@ function updateAvatar(req, res) {
         return;
       }
 
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
