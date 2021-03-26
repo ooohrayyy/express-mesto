@@ -19,13 +19,8 @@ function getUserById(req, res) {
     .orFail(new Error('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Введены некорректные данные' });
-        return;
-      }
-
-      if (err.message === 'Нет пользователя с таким ID') {
-        res.status(404).send({ message: err.message });
+      if (err.name === 'CastError' || err.message === 'Нет пользователя с таким ID') {
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
         return;
       }
 

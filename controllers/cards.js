@@ -35,13 +35,8 @@ function deleteCard(req, res) {
     .orFail(new Error('Нет карточки с таким ID'))
     .then(() => res.send({ message: 'Карточка успешно удалена!' }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный ID карточки' });
-        return;
-      }
-
-      if (err.message === 'Нет карточки с таким ID') {
-        res.status(404).send({ message: err.message });
+      if (err.name === 'CastError' || err.message === 'Нет карточки с таким ID') {
+        res.status(404).send({ message: 'Нет карточки с таким ID' });
         return;
       }
 
@@ -56,13 +51,8 @@ function putLike(req, res) {
     .orFail(new Error('Нет карточки с таким ID'))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный ID карточки' });
-        return;
-      }
-
-      if (err.message === 'Нет карточки с таким ID') {
-        res.status(404).send({ message: err.message });
+      if (err.name === 'CastError' || err.message === 'Нет карточки с таким ID') {
+        res.status(400).send({ message: 'Нет карточки с таким ID' });
         return;
       }
 
@@ -77,13 +67,8 @@ function revokeLike(req, res) {
     .orFail(new Error('Нет карточки с таким ID'))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный ID карточки' });
-        return;
-      }
-
-      if (err.message === 'Нет карточки с таким ID') {
-        res.status(404).send({ message: err.message });
+      if (err.name === 'CastError' || err.message === 'Нет карточки с таким ID') {
+        res.status(400).send({ message: 'Нет карточки с таким ID' });
         return;
       }
 
