@@ -2,14 +2,35 @@ const User = require('../models/user.js');
 
 function getUsers(req, res) {
   User.find({})
-    .then((user) => res.send({ data: user }))
+    .then((users) => {
+      if (users.length === 0) {
+        res.send({ message: 'В базе данных нет пользователей' });
+        return;
+      }
+
+      res.send({ data: users });
+    })
     .catch((err) => res.status(500).send({ message: err }));
 }
 
 function getUserById(req, res) {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
+        return;
+      }
+
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: err });
+    });
 }
 
 function createUser(req, res) {
@@ -17,7 +38,14 @@ function createUser(req, res) {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: err });
+    });
 }
 
 function updateUser(req, res) {
@@ -31,8 +59,22 @@ function updateUser(req, res) {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
+        return;
+      }
+
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: err });
+    });
 }
 
 function updateAvatar(req, res) {
@@ -46,8 +88,22 @@ function updateAvatar(req, res) {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
+        return;
+      }
+
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: err });
+    });
 }
 
 module.exports = {
