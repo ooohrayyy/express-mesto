@@ -1,6 +1,6 @@
 const Card = require('../models/card.js');
 
-function getCards(req, res) {
+function getCards(req, res) { // Получить все карточки
   Card.find({})
     .orFail(new Error('В базе данных нет карточек'))
     .then((cards) => res.send({ data: cards }))
@@ -14,7 +14,7 @@ function getCards(req, res) {
     });
 }
 
-function createCard(req, res) {
+function createCard(req, res) { // Создать новую карточку
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -30,7 +30,7 @@ function createCard(req, res) {
     });
 }
 
-function deleteCard(req, res) {
+function deleteCard(req, res) { // Удалить карточку по ID
   Card.findByIdAndDelete(req.params.id)
     .orFail(new Error('Нет карточки с таким ID'))
     .then(() => res.send({ message: 'Карточка успешно удалена!' }))
@@ -44,7 +44,7 @@ function deleteCard(req, res) {
     });
 }
 
-function putLike(req, res) {
+function putLike(req, res) { // Поставить лайк карточке
   Card.findByIdAndUpdate(req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
@@ -60,7 +60,7 @@ function putLike(req, res) {
     });
 }
 
-function revokeLike(req, res) {
+function revokeLike(req, res) { // Снять лайк с карточки
   Card.findByIdAndUpdate(req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })

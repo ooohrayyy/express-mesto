@@ -1,6 +1,6 @@
 const User = require('../models/user.js');
 
-function getUsers(req, res) {
+function getUsers(req, res) { // Получить всех пользователей
   User.find({})
     .orFail(new Error('В базе данных нет пользователей'))
     .then((users) => res.send({ data: users }))
@@ -14,7 +14,7 @@ function getUsers(req, res) {
     });
 }
 
-function getUserById(req, res) {
+function getUserById(req, res) { // Получить пользователя по ID
   User.findById(req.params.id)
     .orFail(new Error('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
@@ -28,7 +28,7 @@ function getUserById(req, res) {
     });
 }
 
-function createUser(req, res) {
+function createUser(req, res) { // Создать пользователя
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
@@ -43,7 +43,7 @@ function createUser(req, res) {
     });
 }
 
-function updateUser(req, res) {
+function updateUser(req, res) { // Обновить данные пользователя
   const { name, about } = req.body;
   const id = req.user._id;
 
@@ -71,7 +71,7 @@ function updateUser(req, res) {
     });
 }
 
-function updateAvatar(req, res) {
+function updateAvatar(req, res) { // Обновить аватар пользователя
   const { avatar } = req.body;
   const id = req.user._id;
 
