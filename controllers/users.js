@@ -2,30 +2,30 @@ const User = require('../models/user.js');
 
 function getUsers(req, res) {
   User.find({})
-    .then((users) => {
-      if (users.length === 0) {
-        res.send({ message: 'В базе данных нет пользователей' });
+    .orFail(new Error('В базе данных нет пользователей'))
+    .then((users) => res.send({ data: users }))
+    .catch((err) => {
+      if (err.message === 'В базе данных нет пользователей') {
+        res.status(200).send({ message: err.message });
         return;
       }
 
-      res.send({ data: users });
-    })
-    .catch((err) => res.status(500).send({ message: err }));
+      res.status(500).send({ message: err });
+    });
 }
 
 function getUserById(req, res) {
   User.findById(req.params.id)
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
-        return;
-      }
-
-      res.send({ data: user });
-    })
+    .orFail(new Error('Нет пользователя с таким ID'))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      if (err.message === 'Нет пользователя с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
@@ -59,17 +59,16 @@ function updateUser(req, res) {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
-        return;
-      }
-
-      res.send({ data: user });
-    })
+    .orFail(new Error('Нет пользователя с таким ID'))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      if (err.message === 'Нет пользователя с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
@@ -88,17 +87,16 @@ function updateAvatar(req, res) {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
-        return;
-      }
-
-      res.send({ data: user });
-    })
+    .orFail(new Error('Нет пользователя с таким ID'))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Введены некорректные данные' });
+        return;
+      }
+
+      if (err.message === 'Нет пользователя с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
