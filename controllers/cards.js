@@ -2,15 +2,16 @@ const Card = require('../models/card.js');
 
 function getCards(req, res) {
   Card.find({})
-    .then((cards) => {
-      if (cards.length === 0) {
-        res.send({ message: 'В базе данных нет карточек' });
+    .orFail(new Error('В базе данных нет карточек'))
+    .then((cards) => res.send({ data: cards }))
+    .catch((err) => {
+      if (err.message === 'В базе данных нет карточек') {
+        res.status(200).send({ message: err.message });
         return;
       }
 
-      res.send({ data: cards });
-    })
-    .catch((err) => res.status(500).send({ message: err }));
+      res.status(500).send({ message: err });
+    });
 }
 
 function createCard(req, res) {
@@ -31,17 +32,16 @@ function createCard(req, res) {
 
 function deleteCard(req, res) {
   Card.findByIdAndDelete(req.params.id)
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Нет карточки с таким ID' });
-        return;
-      }
-
-      res.send({ message: 'Карточка успешно удалена!' });
-    })
+    .orFail(new Error('Нет карточки с таким ID'))
+    .then(() => res.send({ message: 'Карточка успешно удалена!' }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный ID карточки' });
+        return;
+      }
+
+      if (err.message === 'Нет карточки с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
@@ -53,17 +53,16 @@ function putLike(req, res) {
   Card.findByIdAndUpdate(req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Нет карточки с таким ID' });
-        return;
-      }
-
-      res.send({ data: card });
-    })
+    .orFail(new Error('Нет карточки с таким ID'))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный ID карточки' });
+        return;
+      }
+
+      if (err.message === 'Нет карточки с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
@@ -75,17 +74,16 @@ function revokeLike(req, res) {
   Card.findByIdAndUpdate(req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Нет карточки с таким ID' });
-        return;
-      }
-
-      res.send({ data: card });
-    })
+    .orFail(new Error('Нет карточки с таким ID'))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный ID карточки' });
+        return;
+      }
+
+      if (err.message === 'Нет карточки с таким ID') {
+        res.status(404).send({ message: err.message });
         return;
       }
 
