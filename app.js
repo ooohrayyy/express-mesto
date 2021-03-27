@@ -4,8 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const usersRouter = require('./routes/users.js');
-const cardsRouter = require('./routes/cards.js');
+const routes = require('./routes/index.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -26,11 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-});
+app.use(routes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
