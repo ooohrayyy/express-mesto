@@ -116,10 +116,39 @@ function updateAvatar(req, res) { // Обновить аватар пользо�
     });
 }
 
+function login(req, res) { // Залогинить пользователя
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return res.send({ message: 'Аутентификация прошла успешно!' });
+    })
+    .catch((err) => {
+      if (err.message === 'Неправильные почта или пароль') {
+        res.status(401).send({ message: err.message });
+        return;
+      }
+
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
+}
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUser,
   updateAvatar,
+  login,
 };
