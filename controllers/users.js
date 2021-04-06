@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 
 function getUsers(req, res) { // Получить всех пользователей
@@ -125,22 +126,24 @@ function login(req, res) { // Залогинить пользователя
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
 
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
 
-      return res.send({ message: 'Аутентификация прошла успешно!' });
-    })
-    .catch((err) => {
-      if (err.message === 'Неправильные почта или пароль') {
-        res.status(401).send({ message: err.message });
-        return;
-      }
+          const token = jwt.send({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
 
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+          return res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ message: 'Аутентификация прошла успешно!' });
+        })
+        .catch((err) => {
+          if (err.message === 'Неправильные почта или пароль') {
+            res.status(401).send({ message: err.message });
+            return;
+          }
+
+          res.status(500).send({ message: 'На сервере произошла ошибка' });
+        });
     });
 }
 
