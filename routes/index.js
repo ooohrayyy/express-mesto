@@ -8,8 +8,8 @@ const {
 } = require('../controllers/users.js');
 const cardsRouter = require('./cards.js');
 
-router.use('/signup', createUser);
-router.use('/signin', login);
+router.post('/signup', createUser);
+router.post('/signin', login);
 router.use(auth);
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);

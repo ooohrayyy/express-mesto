@@ -163,15 +163,15 @@ function login(req, res) { // Залогинить пользователя
               sameSite: true,
             },
           ).send({ message: 'Аутентификация прошла успешно!' });
-        })
-        .catch((err) => {
-          if (err.message === 'Неправильные почта или пароль') {
-            res.status(401).send({ message: err.message });
-            return;
-          }
-
-          res.status(500).send({ message: 'На сервере произошла ошибка' });
         });
+    })
+    .catch((err) => {
+      if (err.message === 'Неправильные почта или пароль') {
+        res.status(401).send({ message: err.message });
+        return;
+      }
+
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
