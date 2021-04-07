@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes/index.js');
+const error = require('./middlewares/error.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes);
+app.use(error);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
