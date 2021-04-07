@@ -32,6 +32,20 @@ function getUserById(req, res) { // Получить пользователя п
     });
 }
 
+function getCurrentUser(req, res) {
+  User.findById(req._id)
+    .orFail(new Error('Нет пользователя с таким ID'))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'CastError' || err.message === 'Нет пользователя с таким ID') {
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
+        return;
+      }
+
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
+}
+
 function createUser(req, res) { // Создать пользователя
   const {
     name,
@@ -156,6 +170,7 @@ function login(req, res) { // Залогинить пользователя
 module.exports = {
   getUsers,
   getUserById,
+  getCurrentUser,
   createUser,
   updateUser,
   updateAvatar,

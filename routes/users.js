@@ -3,6 +3,7 @@ const usersRouter = require('express').Router();
 const {
   getUsers,
   getUserById,
+  getCurrentUser,
   createUser,
   updateUser,
   updateAvatar,
@@ -12,6 +13,8 @@ const {
 usersRouter.get('/', getUsers); // Получить всех пользователей
 
 usersRouter.get('/:id', getUserById); // Получить пользователя по ID
+
+usersRouter.get('/me', getCurrentUser); // Получить данные текущего пользователя
 
 usersRouter.post('/signup', createUser); // Создать пользователя
 
