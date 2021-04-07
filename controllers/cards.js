@@ -31,16 +31,21 @@ function createCard(req, res) { // Создать новую карточку
 }
 
 function deleteCard(req, res) { // Удалить карточку по ID
-  Card.findByIdAndDelete(req.params.id)
+  Card.findById(req.params.id)
     .orFail(new Error('Нет карточки с таким ID'))
-    .then(() => res.send({ message: 'Карточка успешно удалена!' }))
+    .then((card) => {
+      if (req.user._id === card.owner._id) {
+        return Card.findByIdAndDelete(req.params.id);
+      }
+
+      return Promise.reject(new Error('У вас нет прав на удаление этой карточки'));
+    })
     .catch((err) => {
       if (err.name === 'CastError' || err.message === 'Нет карточки с таким ID') {
         res.status(404).send({ message: 'Нет карточки с таким ID' });
-        return;
+      } else if (err.name === 'У вас нет прав на удаление этой карточки') {
+        res.status(403).send({ message: err.message });
       }
-
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 }
 
