@@ -10,12 +10,12 @@ const {
 
 usersRouter.get('/', getUsers); // Получить всех пользователей
 
-usersRouter.get('/:id', getUserById); // Получить пользователя по ID
-
 usersRouter.get('/me', getCurrentUser); // Получить данные текущего пользователя
 
 usersRouter.patch('/me', updateUser); // Обновить данные пользователя
 
 usersRouter.patch('/me/avatar', updateAvatar); // Обновить аватар пользователя
+
+usersRouter.get('/:id', getUserById); // Получить пользователя по ID
 
 module.exports = usersRouter;

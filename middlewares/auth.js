@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const AuthenticationError = require('../errors/authentication-err.js');
+
 const { JWT_SECRET } = process.env;
 
 function auth(req, res, next) {
@@ -8,7 +10,7 @@ function auth(req, res, next) {
     req.user = payload;
     next();
   } catch (err) {
-    res.status(401).send({ message: 'Неправильный токен авторизации' });
+    next(new AuthenticationError('Неправильный токен авторизации'));
   }
 }
 

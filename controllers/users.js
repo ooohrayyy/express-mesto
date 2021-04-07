@@ -4,55 +4,45 @@ const User = require('../models/user.js');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const { AuthenticationError } = require('../errors/authentication-err.js');
-const { EmptyDatabaseError } = require('../errors/empty-database-err.js');
-const { IncorrectValueError } = require('../errors/incorrect-value-err.js');
-const { NotFoundError } = require('../errors/not-found-err.js');
-const { UnauthorizedError } = require('../errors/unauthorized-err.js');
+const AuthenticationError = require('../errors/authentication-err.js');
+const EmptyDatabaseError = require('../errors/empty-database-err.js');
+const IncorrectValueError = require('../errors/incorrect-value-err.js');
+const NotFoundError = require('../errors/not-found-err.js');
 
-function getUsers(req, res) { // Получить всех пользователей
+function getUsers(req, res, next) { // Получить всех пользователей
   User.find({})
-    .orFail(new Error('В базе данных нет пользователей'))
+    .orFail(new EmptyDatabaseError('В базе данных нет пользователей'))
     .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      if (err.message === 'В базе данных нет пользователей') {
-        res.status(200).send({ message: err.message });
-        return;
-      }
-
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => next(err));
 }
 
-function getUserById(req, res) { // Получить пользователя по ID
+function getUserById(req, res, next) { // Получить пользователя по ID
   User.findById(req.params.id)
-    .orFail(new Error('Нет пользователя с таким ID'))
+    .orFail(new NotFoundError('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.message === 'Нет пользователя с таким ID') {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
-        return;
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Нет пользователя с таким ID'));
       }
 
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      next(err);
     });
 }
 
-function getCurrentUser(req, res) {
+function getCurrentUser(req, res, next) { // Получить данные о себе
   User.findById(req.user._id)
-    .orFail(new Error('Нет пользователя с таким ID'))
+    .orFail(new NotFoundError('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.message === 'Нет пользователя с таким ID') {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
-        return;
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Нет пользователя с таким ID'));
       }
 
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      next(err);
     });
 }
 
-function createUser(req, res) { // Создать пользователя
+function createUser(req, res, next) { // Создать пользователя
   const {
     name,
     about,
@@ -73,19 +63,28 @@ function createUser(req, res) { // Создать пользователя
         .then((user) => res.send({ data: user }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            res.status(400).send({ message: 'Введены некорректные данные' });
-            return;
+            next(new IncorrectValueError('Введены некорректные данные'));
           }
 
-          res.status(500).send({ message: 'На сервере произошла ошибка' });
+          next(err);
         });
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка при хешировании пароля' }));
+    .catch((err) => {
+      if (err.message.includes('Illegal arguments')) {
+        next(new IncorrectValueError('Не введён пароль'));
+      }
+
+      next(err);
+    });
 }
 
-function updateUser(req, res) { // Обновить данные пользователя
+function updateUser(req, res, next) { // Обновить данные пользователя
   const { name, about } = req.body;
   const id = req.user._id;
+
+  if (!name || !about) {
+    throw new IncorrectValueError('Не введены имя или описание');
+  }
 
   User.findByIdAndUpdate(id,
     { name, about },
@@ -94,26 +93,24 @@ function updateUser(req, res) { // Обновить данные пользов�
       runValidators: true,
       upsert: true,
     })
-    .orFail(new Error('Нет пользователя с таким ID'))
+    .orFail(new NotFoundError('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Введены некорректные данные' });
-        return;
+        next(new IncorrectValueError('Введены некорректные данные'));
       }
 
-      if (err.message === 'Нет пользователя с таким ID') {
-        res.status(404).send({ message: err.message });
-        return;
-      }
-
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      next(err);
     });
 }
 
-function updateAvatar(req, res) { // Обновить аватар пользователя
+function updateAvatar(req, res, next) { // Обновить аватар пользователя
   const { avatar } = req.body;
   const id = req.user._id;
+
+  if (!avatar) {
+    throw new IncorrectValueError('Введены некорректные данные');
+  }
 
   User.findByIdAndUpdate(id,
     { avatar },
@@ -122,36 +119,36 @@ function updateAvatar(req, res) { // Обновить аватар пользо�
       runValidators: true,
       upsert: true,
     })
-    .orFail(new Error('Нет пользователя с таким ID'))
+    .orFail(new NotFoundError('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Введены некорректные данные' });
-        return;
+        next(new IncorrectValueError('Введены некорректные данные'));
       }
 
-      if (err.message === 'Нет пользователя с таким ID') {
-        res.status(404).send({ message: err.message });
-        return;
-      }
-
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      next(err);
     });
 }
 
-function login(req, res) { // Залогинить пользователя
+// ! ILLEGAL ARGUMENTS
+
+function login(req, res, next) { // Залогинить пользователя
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new IncorrectValueError('Не введены почта или пароль');
+  }
 
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new AuthenticationError('Неправильные почта или пароль');
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            throw new AuthenticationError('Неправильные почта или пароль');
           }
 
           const token = jwt.sign(
@@ -172,12 +169,11 @@ function login(req, res) { // Залогинить пользователя
         });
     })
     .catch((err) => {
-      if (err.message === 'Неправильные почта или пароль') {
-        res.status(401).send({ message: err.message });
-        return;
+      if (err.message.includes('Illegal arguments')) {
+        next(new IncorrectValueError('Введены некорректные данные'));
       }
 
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      next(err);
     });
 }
 
