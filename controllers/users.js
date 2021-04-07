@@ -33,7 +33,7 @@ function getUserById(req, res) { // Получить пользователя п
 }
 
 function getCurrentUser(req, res) {
-  User.findById(req._id)
+  User.findById(req.user._id)
     .orFail(new Error('Нет пользователя с таким ID'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
