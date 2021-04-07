@@ -4,10 +4,8 @@ const {
   getUsers,
   getUserById,
   getCurrentUser,
-  createUser,
   updateUser,
   updateAvatar,
-  login,
 } = require('../controllers/users.js');
 
 usersRouter.get('/', getUsers); // Получить всех пользователей
@@ -15,10 +13,6 @@ usersRouter.get('/', getUsers); // Получить всех пользоват�
 usersRouter.get('/:id', getUserById); // Получить пользователя по ID
 
 usersRouter.get('/me', getCurrentUser); // Получить данные текущего пользователя
-
-usersRouter.post('/signup', createUser); // Создать пользователя
-
-usersRouter.post('/signin', login); // Аутентифицировать пользователя
 
 usersRouter.patch('/me', updateUser); // Обновить данные пользователя
 
