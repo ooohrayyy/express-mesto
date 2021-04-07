@@ -6,9 +6,9 @@ function auth(req, res, next) {
   try {
     const payload = jwt.verify(req.cookies.jwt, JWT_SECRET);
     req.user = payload;
-    return next();
+    next();
   } catch (err) {
-    return res.status(401).send({ message: 'Неправильный токен авторизации' });
+    res.status(401).send({ message: 'Неправильный токен авторизации' });
   }
 }
 
