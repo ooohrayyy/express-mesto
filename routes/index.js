@@ -10,9 +10,8 @@ const cardsRouter = require('./cards.js');
 
 router.post('/signup', createUser);
 router.post('/signin', login);
-router.use(auth);
-router.use('/users', usersRouter);
-router.use('/cards', cardsRouter);
+router.use('/users', auth, usersRouter);
+router.use('/cards', auth, cardsRouter);
 router.use('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
