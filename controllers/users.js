@@ -136,7 +136,7 @@ function updateAvatar(req, res) { // Обновить аватар пользо�
 function login(req, res) { // Залогинить пользователя
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
