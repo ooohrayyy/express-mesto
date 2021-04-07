@@ -6,13 +6,16 @@ const {
   createUser,
   updateUser,
   updateAvatar,
+  login,
 } = require('../controllers/users.js');
 
 usersRouter.get('/', getUsers); // Получить всех пользователей
 
 usersRouter.get('/:id', getUserById); // Получить пользователя по ID
 
-usersRouter.post('/', createUser); // Создать пользователя
+usersRouter.post('/signup', createUser); // Создать пользователя
+
+usersRouter.post('/signin', login); // Аутентифицировать пользователя
 
 usersRouter.patch('/me', updateUser); // Обновить данные пользователя
 
