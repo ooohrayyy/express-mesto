@@ -4,6 +4,12 @@ const User = require('../models/user.js');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+const { AuthenticationError } = require('../errors/authentication-err.js');
+const { EmptyDatabaseError } = require('../errors/empty-database-err.js');
+const { IncorrectValueError } = require('../errors/incorrect-value-err.js');
+const { NotFoundError } = require('../errors/not-found-err.js');
+const { UnauthorizedError } = require('../errors/unauthorized-err.js');
+
 function getUsers(req, res) { // Получить всех пользователей
   User.find({})
     .orFail(new Error('В базе данных нет пользователей'))
