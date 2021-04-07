@@ -5,7 +5,7 @@ const usersRouter = require('./users.js');
 const {
   createUser,
   login,
-} = require('./users.js');
+} = require('../controllers/users.js');
 const cardsRouter = require('./cards.js');
 
 router.use('/signup', createUser);
