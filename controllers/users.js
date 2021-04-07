@@ -154,7 +154,15 @@ function login(req, res) { // Залогинить пользователя
             { expiresIn: '7d' },
           );
 
-          return res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ message: 'Аутентификация прошла успешно!' });
+          return res.cookie(
+            'jwt',
+            token,
+            {
+              maxAge: 3600000,
+              httpOnly: true,
+              sameSite: true,
+            },
+          ).send({ message: 'Аутентификация прошла успешно!' });
         })
         .catch((err) => {
           if (err.message === 'Неправильные почта или пароль') {
