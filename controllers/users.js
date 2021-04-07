@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 function getUsers(req, res) { // Получить всех пользователей
   User.find({})
     .orFail(new Error('В базе данных нет пользователей'))
@@ -132,7 +134,11 @@ function login(req, res) { // Залогинить пользователя
             return Promise.reject(new Error('Неправильные почта или пароль'));
           }
 
-          const token = jwt.send({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
+          const token = jwt.send(
+            { _id: user.id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            { expiresIn: '7d' },
+          );
 
           return res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ message: 'Аутентификация прошла успешно!' });
         })
