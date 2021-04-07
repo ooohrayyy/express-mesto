@@ -18,14 +18,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  req.user = {
-    _id: '605de40f523d93051b6347d6',
-  };
-
-  next();
-});
-
 app.use(routes);
 
 app.listen(PORT, () => {
