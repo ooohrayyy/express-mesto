@@ -148,7 +148,7 @@ function login(req, res) { // Залогинить пользователя
             return Promise.reject(new Error('Неправильные почта или пароль'));
           }
 
-          const token = jwt.send(
+          const token = jwt.sign(
             { _id: user.id },
             NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
             { expiresIn: '7d' },
