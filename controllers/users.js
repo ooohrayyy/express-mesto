@@ -141,8 +141,6 @@ function updateAvatar(req, res, next) { // Обновить аватар пол�
     });
 }
 
-// ! ILLEGAL ARGUMENTS
-
 function login(req, res, next) { // Залогинить пользователя
   const { email, password } = req.body;
 
