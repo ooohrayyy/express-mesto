@@ -29,7 +29,7 @@ usersRouter.patch( // Обновить аватар пользователя
   celebrate({
     body: Joi.object().keys({
       avatar: Joi.string()
-        .uri()
+        .pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/, 'URL')
         .min(2)
         .max(30)
         .required(),
