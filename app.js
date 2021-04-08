@@ -1,3 +1,6 @@
+// ! Привет команде код-ревью!
+// ! Работа получилась очень большой и запутанной — надеюсь, ошибок допустил не слишком много :)
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
