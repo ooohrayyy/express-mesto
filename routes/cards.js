@@ -26,7 +26,7 @@ cardsRouter.delete( // Удалить карточку по ID
   '/:id',
   celebrate({
     params: Joi.object().keys({
-      id: Joi.string().required(),
+      id: Joi.string().hex().length(24).required(),
     }),
   }),
   deleteCard,
@@ -36,7 +36,7 @@ cardsRouter.put( // Поставить лайк карточке
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().required(),
+      cardId: Joi.string().hex().length(24).required(),
     }),
   }),
   putLike,
@@ -46,7 +46,7 @@ cardsRouter.delete( // Снять лайк с карточки
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().required(),
+      cardId: Joi.string().hex().length(24).required(),
     }),
   }),
   revokeLike,
