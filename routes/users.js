@@ -42,7 +42,7 @@ usersRouter.get( // Получить пользователя по ID
   '/:id',
   celebrate({
     params: Joi.object().keys({
-      id: Joi.string().required(),
+      id: Joi.string().hex().length(24).required(),
     }),
   }),
   getUserById,
