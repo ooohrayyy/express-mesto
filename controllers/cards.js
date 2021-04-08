@@ -3,7 +3,7 @@ const Card = require('../models/card.js');
 const EmptyDatabaseError = require('../errors/empty-database-err.js');
 const IncorrectValueError = require('../errors/incorrect-value-err.js');
 const NotFoundError = require('../errors/not-found-err.js');
-const UnauthorizedError = require('../errors/unauthorized-err.js');
+const ForbiddenError = require('../errors/forbidden-err.js');
 
 function getCards(req, res, next) { // Получить все карточки
   Card.find({})
@@ -36,7 +36,7 @@ function deleteCard(req, res, next) { // Удалить карточку по ID
           .then(() => res.send({ message: 'Карточка успешно удалена!' }));
       }
 
-      throw new UnauthorizedError('У вас нет прав на удаление этой карточки');
+      throw new ForbiddenError('У вас нет прав на удаление этой карточки');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
