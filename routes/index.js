@@ -9,7 +9,7 @@ const {
 } = require('../controllers/users.js');
 const cardsRouter = require('./cards.js');
 
-router.post(
+router.post( // Создать пользователя
   '/signup',
   celebrate({
     body: Joi.object().keys({
@@ -22,7 +22,7 @@ router.post(
   }),
   createUser,
 );
-router.post(
+router.post( // Залогинить пользователя
   '/signin',
   celebrate({
     body: Joi.object().keys({
