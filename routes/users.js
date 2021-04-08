@@ -28,7 +28,11 @@ usersRouter.patch( // Обновить аватар пользователя
   '/me/avatar',
   celebrate({
     body: Joi.object.keys({
-      avatar: Joi.string().min(2).max(30).required(),
+      avatar: Joi.string()
+        .uri()
+        .min(2)
+        .max(30)
+        .required(),
     }),
   }),
   updateAvatar,
