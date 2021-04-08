@@ -60,7 +60,15 @@ function createUser(req, res, next) { // Создать пользователя
         email,
         password: hash,
       })
-        .then((user) => res.send({ data: user }))
+        .then((user) => res.send({
+          data: {
+            _id: user._id,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+          },
+        }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new IncorrectValueError('Введены некорректные данные'));
