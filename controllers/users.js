@@ -7,6 +7,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const AuthenticationError = require('../errors/authentication-err.js');
 const EmptyDatabaseError = require('../errors/empty-database-err.js');
 const IncorrectValueError = require('../errors/incorrect-value-err.js');
+const ExistingEmailError = require('../errors/existing-email-err.js');
 const NotFoundError = require('../errors/not-found-err.js');
 
 function getUsers(req, res, next) { // Получить всех пользователей
@@ -72,6 +73,8 @@ function createUser(req, res, next) { // Создать пользователя
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new IncorrectValueError('Введены некорректные данные'));
+          } else if (err.code === 11000) {
+            next(new ExistingEmailError('Уже есть пользователь с такой почтой'));
           }
 
           next(err);
