@@ -16,7 +16,7 @@ usersRouter.get('/me', getCurrentUser); // Получить данные тек�
 usersRouter.patch( // Обновить данные пользователя
   '/me',
   celebrate({
-    body: Joi.object.keys({
+    body: Joi.object().keys({
       name: Joi.string().min(2).max(30).required(),
       about: Joi.string().min(2).max(30).required(),
     }),
@@ -27,7 +27,7 @@ usersRouter.patch( // Обновить данные пользователя
 usersRouter.patch( // Обновить аватар пользователя
   '/me/avatar',
   celebrate({
-    body: Joi.object.keys({
+    body: Joi.object().keys({
       avatar: Joi.string()
         .uri()
         .min(2)
@@ -41,7 +41,7 @@ usersRouter.patch( // Обновить аватар пользователя
 usersRouter.get( // Получить пользователя по ID
   '/:id',
   celebrate({
-    params: Joi.object.keys({
+    params: Joi.object().keys({
       id: Joi.string().required(),
     }),
   }),

@@ -12,7 +12,7 @@ const cardsRouter = require('./cards.js');
 router.post(
   '/signup',
   celebrate({
-    body: Joi.object.keys({
+    body: Joi.object().keys({
       name: Joi.string().min(2).max(30).required(),
       about: Joi.string().min(2).max(30).required(),
       avatar: Joi.string().uri().required(),
@@ -25,7 +25,7 @@ router.post(
 router.post(
   '/signin',
   celebrate({
-    body: Joi.object.keys({
+    body: Joi.object().keys({
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
     }),

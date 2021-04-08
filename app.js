@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes);
-app.use(errors);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
