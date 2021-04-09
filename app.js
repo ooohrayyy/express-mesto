@@ -1,6 +1,3 @@
-// ! Третий привет команде код-ревью!
-// ! Спасибо за пояснение про секретный ключ — и другие разборы :)
-
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
