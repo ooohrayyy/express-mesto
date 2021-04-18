@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 
 const routes = require('./routes/index.js');
 const errorHandler = require('./middlewares/errorHandler.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -20,7 +21,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(requestLogger);
 app.use(routes);
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
