@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(cors({
+  origin: '*',
   credentials: true,
 }));
 app.use(routes);
