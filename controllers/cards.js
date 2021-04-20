@@ -1,4 +1,5 @@
 const Card = require('../models/card.js');
+const User = require('../models/user.js');
 
 const EmptyDatabaseError = require('../errors/empty-database-err.js');
 const IncorrectValueError = require('../errors/incorrect-value-err.js');
@@ -15,11 +16,25 @@ function getCards(req, res, next) { // Получить все карточки
 function createCard(req, res, next) { // Создать новую карточку
   const { name, link } = req.body;
   const owner = req.user._id;
+  let ownerName;
 
-  Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+  User.findById(owner)
+    .orFail(new NotFoundError('Нет пользователя с таким ID'))
+    .then((user) => {
+      ownerName = user.name;
+
+      return Card.create({
+        name,
+        link,
+        owner,
+        ownerName,
+      })
+        .then((card) => res.send(card));
+    })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Запрос от неизвестного пользователя'));
+      } else if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Введены некорректные данные'));
       }
 
