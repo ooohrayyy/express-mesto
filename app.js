@@ -20,7 +20,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(cors({
-  origin: 'https://mesto-app.nomoredomains.monster',
+  origin: 'https://mesto-app.nomoredomains.monster/',
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
