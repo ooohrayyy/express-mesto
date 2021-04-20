@@ -12,6 +12,11 @@ const cardsRouter = require('./cards.js');
 
 const NotFoundError = require('../errors/not-found-err.js');
 
+router.get('/crash-test', () => { // Краш-тест
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 router.post( // Создать пользователя
   '/signup',
   celebrate({
