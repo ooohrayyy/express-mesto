@@ -31,7 +31,6 @@ usersRouter.patch( // Обновить аватар пользователя
       avatar: Joi.string()
         .pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/, 'URL')
         .min(2)
-        .max(30)
         .required(),
     }),
   }),
