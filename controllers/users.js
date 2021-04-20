@@ -13,14 +13,14 @@ const NotFoundError = require('../errors/not-found-err.js');
 function getUsers(req, res, next) { // Получить всех пользователей
   User.find({})
     .orFail(new EmptyDatabaseError('В базе данных нет пользователей'))
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send(users))
     .catch((err) => next(err));
 }
 
 function getUserById(req, res, next) { // Получить пользователя по ID
   User.findById(req.params.id)
     .orFail(new NotFoundError('Нет пользователя с таким ID'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Нет пользователя с таким ID'));
@@ -33,7 +33,7 @@ function getUserById(req, res, next) { // Получить пользовате�
 function getCurrentUser(req, res, next) { // Получить данные о себе
   User.findById(req.user._id)
     .orFail(new NotFoundError('Нет пользователя с таким ID'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Нет пользователя с таким ID'));
@@ -62,13 +62,11 @@ function createUser(req, res, next) { // Создать пользователя
         password: hash,
       })
         .then((user) => res.send({
-          data: {
-            _id: user._id,
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-            email: user.email,
-          },
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
         }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
@@ -105,7 +103,7 @@ function updateUser(req, res, next) { // Обновить данные поль�
       upsert: true,
     })
     .orFail(new NotFoundError('Нет пользователя с таким ID'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Введены некорректные данные'));
@@ -131,7 +129,7 @@ function updateAvatar(req, res, next) { // Обновить аватар пол�
       upsert: true,
     })
     .orFail(new NotFoundError('Нет пользователя с таким ID'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Введены некорректные данные'));

@@ -8,7 +8,7 @@ const ForbiddenError = require('../errors/forbidden-err.js');
 function getCards(req, res, next) { // Получить все карточки
   Card.find({})
     .orFail(new EmptyDatabaseError('В базе данных нет карточек'))
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch((err) => next(err));
 }
 
@@ -17,7 +17,7 @@ function createCard(req, res, next) { // Создать новую карточ�
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Введены некорректные данные'));
@@ -52,7 +52,7 @@ function putLike(req, res, next) { // Поставить лайк карточк
     { $addToSet: { likes: req.user._id } },
     { new: true })
     .orFail(new NotFoundError('Нет карточки с таким ID'))
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Нет карточки с таким ID'));
@@ -67,7 +67,7 @@ function revokeLike(req, res, next) { // Снять лайк с карточки
     { $pull: { likes: req.user._id } },
     { new: true })
     .orFail(new NotFoundError('Нет карточки с таким ID'))
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Нет карточки с таким ID'));
