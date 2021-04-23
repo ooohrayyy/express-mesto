@@ -25,6 +25,13 @@ const limiter = rateLimit({
   max: 100,
 });
 
+const corsWhitelist = [
+  'https://mesto-app.nomoredomains.monster',
+  'http://mesto-app.nomoredomains.monster',
+];
+
+let allowedOrigin;
+
 //
 
 app.set('trust proxy', 1);
@@ -41,11 +48,15 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+app.use((req, res, next) => {
+  if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+    allowedOrigin = req.headers.origin;
+  }
+
+  next();
+});
 app.use(cors({
-  origin: [
-    'https://mesto-app.nomoredomains.monster',
-    'http://mesto-app.nomoredomains.monster',
-  ],
+  origin: allowedOrigin,
   credentials: true,
 }));
 app.use(routes);
