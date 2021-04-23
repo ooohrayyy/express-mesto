@@ -63,7 +63,7 @@ function deleteCard(req, res, next) { // Удалить карточку по ID
 }
 
 function putLike(req, res, next) { // Поставить лайк карточке
-  Card.findByIdAndUpdate(req.params.cardId,
+  Card.findByIdAndUpdate(req.params.id,
     { $addToSet: { likes: req.user._id } },
     { new: true })
     .orFail(new NotFoundError('Нет карточки с таким ID'))
@@ -78,7 +78,7 @@ function putLike(req, res, next) { // Поставить лайк карточк
 }
 
 function revokeLike(req, res, next) { // Снять лайк с карточки
-  Card.findByIdAndUpdate(req.params.cardId,
+  Card.findByIdAndUpdate(req.params.id,
     { $pull: { likes: req.user._id } },
     { new: true })
     .orFail(new NotFoundError('Нет карточки с таким ID'))
