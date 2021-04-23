@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const { errors } = require('celebrate');
 
 const {
@@ -34,6 +35,7 @@ mongoose.connect(DATA_BASE, {
   useFindAndModify: false,
 });
 
+app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
 app.use(bodyParser.json());
