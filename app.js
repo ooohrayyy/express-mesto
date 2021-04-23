@@ -1,14 +1,12 @@
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
-
-const routes = require('./routes/index.js');
-const errorHandler = require('./middlewares/errorHandler.js');
-const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 
 const {
   PORT = 3000,
@@ -17,12 +15,26 @@ const {
 
 const app = express();
 
+const routes = require('./routes/index.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
+const errorHandler = require('./middlewares/errorHandler.js');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+//
+
+app.set('trust proxy', 1);
+
 mongoose.connect(DATA_BASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
 
+app.use(limiter);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
