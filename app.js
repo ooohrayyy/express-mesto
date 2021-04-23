@@ -25,12 +25,16 @@ const limiter = rateLimit({
   max: 100,
 });
 
-const corsWhitelist = [
-  'https://mesto-app.nomoredomains.monster',
-  'http://mesto-app.nomoredomains.monster',
-];
+const corsWhiteList = ['https://mesto-app.nomoredomains.monster', 'http://mesto-app.nomoredomains.monster'];
 
-let allowedOrigin;
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (corsWhiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    }
+  },
+  credentials: true,
+};
 
 //
 
@@ -42,17 +46,7 @@ mongoose.connect(DATA_BASE, {
   useFindAndModify: false,
 });
 
-app.use((req, res, next) => {
-  if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
-    allowedOrigin = req.headers.origin;
-  }
-
-  next();
-});
-app.use(cors({
-  origin: allowedOrigin,
-  credentials: true,
-}));
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
