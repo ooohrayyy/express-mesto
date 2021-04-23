@@ -10,10 +10,14 @@ const routes = require('./routes/index.js');
 const errorHandler = require('./middlewares/errorHandler.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 
-const { PORT = 3000 } = process.env;
+const {
+  PORT = 3000,
+  DATA_BASE = 'mongodb://localhost:27017/mestodb',
+} = process.env;
+
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect(DATA_BASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
