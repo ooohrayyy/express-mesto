@@ -28,7 +28,7 @@ const limiter = rateLimit({
 // const corsWhiteList = ['https://mesto-app.nomoredomains.monster', 'http://mesto-app.nomoredomains.monster'];
 
 const corsOptions = {
-  origin: '*',
+  origin: 'https://mesto-app.nomoredomains.monster',
   credentials: true,
 };
 
