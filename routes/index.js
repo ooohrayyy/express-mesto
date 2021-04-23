@@ -7,6 +7,7 @@ const usersRouter = require('./users.js');
 const {
   createUser,
   login,
+  signOut,
 } = require('../controllers/users.js');
 const cardsRouter = require('./cards.js');
 
@@ -17,6 +18,7 @@ router.get('/crash-test', () => { // Краш-тест
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+
 router.post( // Создать пользователя
   '/signup',
   celebrate({
@@ -30,6 +32,7 @@ router.post( // Создать пользователя
   }),
   createUser,
 );
+
 router.post( // Залогинить пользователя
   '/signin',
   celebrate({
@@ -40,8 +43,13 @@ router.post( // Залогинить пользователя
   }),
   login,
 );
+
+router.delete('/signout', signOut);
+
 router.use('/users', auth, usersRouter);
+
 router.use('/cards', auth, cardsRouter);
+
 router.use('*', () => {
   throw new NotFoundError('Страница не найдена');
 });

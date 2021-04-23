@@ -184,6 +184,10 @@ function login(req, res, next) { // Залогинить пользовател�
     });
 }
 
+function signOut(req, res) {
+  res.clearCookie('jwt').send({ message: 'Пользователь деавторизован' });
+}
+
 module.exports = {
   getUsers,
   getUserById,
@@ -192,4 +196,5 @@ module.exports = {
   updateUser,
   updateAvatar,
   login,
+  signOut,
 };
