@@ -1,5 +1,22 @@
 const { celebrate, Joi } = require('celebrate');
 
+const preValidateNewUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/, 'URL'),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+  }),
+});
+
+const preValidateLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+  }),
+});
+
 const preValidateId = celebrate({
   params: Joi.object().keys({
     id: Joi.string().hex().length(24).required(),
@@ -30,6 +47,8 @@ const preValidateCardData = celebrate({
 });
 
 module.exports = {
+  preValidateNewUser,
+  preValidateLogin,
   preValidateUserData,
   preValidateAvatar,
   preValidateId,

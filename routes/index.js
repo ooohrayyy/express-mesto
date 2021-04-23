@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
 
 const auth = require('../middlewares/auth.js');
+const { preValidateNewUser, preValidateLogin } = require('../middlewares/preValidate.js');
 
 const usersRouter = require('./users.js');
 const {
@@ -21,26 +21,13 @@ router.get('/crash-test', () => { // Краш-тест
 
 router.post( // Создать пользователя
   '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/, 'URL'),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    }),
-  }),
+  preValidateNewUser,
   createUser,
 );
 
 router.post( // Залогинить пользователя
   '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    }),
-  }),
+  preValidateLogin,
   login,
 );
 
