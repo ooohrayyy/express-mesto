@@ -1,5 +1,4 @@
 const cardsRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
 
 const {
   getCards,
@@ -9,46 +8,31 @@ const {
   revokeLike,
 } = require('../controllers/cards.js');
 
+const { preValidateId, preValidateCardData } = require('../middlewares/preValidate.js');
+
 cardsRouter.get('/', getCards); // Получить все карточки
 
 cardsRouter.post( // Создать карточку
   '/',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30).required(),
-      link: Joi.string().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/, 'URL').required(),
-    }),
-  }),
+  preValidateCardData,
   createCard,
 );
 
 cardsRouter.delete( // Удалить карточку по ID
   '/:id',
-  celebrate({
-    params: Joi.object().keys({
-      id: Joi.string().hex().length(24).required(),
-    }),
-  }),
+  preValidateId,
   deleteCard,
 );
 
 cardsRouter.put( // Поставить лайк карточке
-  '/:cardId/likes',
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().hex().length(24).required(),
-    }),
-  }),
+  '/:id/likes',
+  preValidateId,
   putLike,
 );
 
 cardsRouter.delete( // Снять лайк с карточки
-  '/:cardId/likes',
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().hex().length(24).required(),
-    }),
-  }),
+  '/:id/likes',
+  preValidateId,
   revokeLike,
 );
 
